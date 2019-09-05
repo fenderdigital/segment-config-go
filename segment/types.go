@@ -52,9 +52,7 @@ type Destination struct {
 
 // TrackingPlans defines the struct for the tracking plan object
 type TrackingPlans struct {
-	TrackingPlan struct {
-		TrackingPlans []TrackingPlan `json:"trackingplans,omitempty"`
-	}
+	TrackingPlans []TrackingPlan `json:"tracking_plans,omitempty"`
 }
 
 // TrackingPlan defines the struct for the destination object
@@ -63,15 +61,15 @@ type TrackingPlan struct {
 	DisplayName string    `json:"display_name,omitempty"`
 	Rules       Rules     `json:"rules,omitempty"`
 	CreateTime  time.Time `json:"create_time,omitempty"`
-	UpdateTime  time.Time `josn:"update_time,omitempty"`
+	UpdateTime  time.Time `json:"update_time,omitempty"`
 }
 
 // Rules contains the information about all the rules of a tracking plan
 type Rules struct {
-	Global   Rule   `json:"global,omitempty"`
-	Events   Events `json:"events,omitempty"`
-	Identify Rule   `json:"identify,omitempty"`
-	Group    Rule   `json:"group,omitempty"`
+	Global   Rule    `json:"global"`
+	Events   []Event `json:"events"`
+	Identify []Rule  `json:"identify"`
+	Group    []Rule  `json:"group"`
 }
 
 // Rule contains the information about the rule definition
@@ -79,10 +77,11 @@ type Rule struct {
 	Schema     string      `json:"$schema,omitempty"`
 	Type       string      `json:"type,omitempty"`
 	Properties interface{} `json:"properties,omitempty"`
+	Required   []string    `json:"required,omitempty"`
 }
 
-// Events contains the rules for each tracking event
-type Events struct {
+// Event contains the rules for each tracking event
+type Event struct {
 	Name        string `json:"name,omitempty"`
 	Version     string `json:"version,omitempty"`
 	Description string `json:"description,omitempty"`
