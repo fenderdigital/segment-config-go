@@ -115,3 +115,7 @@ type destinationUpdateRequest struct {
 	Destination Destination `json:"destination,omitempty"`
 	UpdateMask  UpdateMask  `json:"update_mask,omitempty"`
 }
+
+type trackingPlanCreateRequest struct {
+	TrackingPlan TrackingPlan `json:"tracking_plan,omitempty"`
+}
