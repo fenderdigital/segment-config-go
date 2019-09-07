@@ -39,3 +39,28 @@ func (c *Client) GetTrackingPlan(planName string) (TrackingPlan, error) {
 	}
 	return p, nil
 }
+
+// CreateTrackingPlan creates a new tracking plan
+func (c *Client) CreateTrackingPlan(displayName string, rules Rules) (TrackingPlan, error) {
+	var p TrackingPlan
+
+	trackingPlan := TrackingPlan{
+		DisplayName: displayName,
+		Rules:       rules,
+	}
+	req := trackingPlanCreateRequest{trackingPlan}
+	data, err := c.doRequest(http.MethodPost,
+		fmt.Sprintf("%s/%s/%s",
+			WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint),
+		req)
+	if err != nil {
+		return p, err
+	}
+	err = json.Unmarshal(data, &p)
+	if err != nil {
+		return p, errors.Wrap(err, "failed to unmarshall source response")
+	}
+
+	return p, nil
+
+}
