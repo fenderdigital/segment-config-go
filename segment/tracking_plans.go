@@ -41,18 +41,19 @@ func (c *Client) GetTrackingPlan(planName string) (TrackingPlan, error) {
 }
 
 // CreateTrackingPlan creates a new tracking plan
-func (c *Client) CreateTrackingPlan(displayName string, rules Rules) (TrackingPlan, error) {
-	var p TrackingPlan
+func (c *Client) CreateTrackingPlan(displayName string, rules Rules) (trackingPlanCreateRequest, error) {
+	var p trackingPlanCreateRequest
 
-	trackingPlan := TrackingPlan{
-		DisplayName: displayName,
-		Rules:       rules,
-	}
-	req := trackingPlanCreateRequest{trackingPlan}
+	plan := trackingPlanCreateRequest{
+		TrackingPlan: TrackingPlan{
+			DisplayName: displayName,
+			Rules:       rules,
+		}}
+	//req := trackingPlanCreateRequest{plan}
 	data, err := c.doRequest(http.MethodPost,
-		fmt.Sprintf("%s/%s/%s",
+		fmt.Sprintf("%s/%s/%s/",
 			WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint),
-		req)
+		plan)
 	if err != nil {
 		return p, err
 	}
