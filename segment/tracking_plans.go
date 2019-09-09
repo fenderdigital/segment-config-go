@@ -84,7 +84,7 @@ func (c *Client) UpdateTrackingPlan(planName string, paths []string, updatedPlan
 // CreateTrackingPlanSourceConnection connects a source to a tracking plan
 func (c *Client) CreateTrackingPlanSourceConnection(planName string, srcName string) (TrackingPlan, error) {
 	var p TrackingPlan
-	req := trackingPlanCreateSourceConnection{SourceName: srcName}
+	req := trackingPlanSourceConnection{SourceName: srcName}
 	data, err := c.doRequest(http.MethodPost, fmt.Sprintf("%s/%s/%s/%s/%s/", WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint, planName, TrackingPlanSourceConnectionEndpoint), req)
 	if err != nil {
 		return p, err
@@ -94,5 +94,19 @@ func (c *Client) CreateTrackingPlanSourceConnection(planName string, srcName str
 		return p, errors.Wrap(err, "failed to unmarshal tracking plan source connection response")
 	}
 
+	return p, nil
+}
+
+// ListTrackingPlanSourceConnections lists the source connections for a tracking plan
+func (c *Client) ListTrackingPlanSourceConnections(planName string) (TrackingPlan, error) {
+	var p TrackingPlan
+	data, err := c.doRequest(http.MethodGet, fmt.Sprintf("%s/%s/%s/%s/%s/", WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint, planName, TrackingPlanSourceConnectionEndpoint), nil)
+	if err != nil {
+		return p, err
+	}
+	err = json.Unmarshal(data, &p)
+	if err != nil {
+		return p, errors.Wrap(err, "failed to unmarshal tracking plan response")
+	}
 	return p, nil
 }
