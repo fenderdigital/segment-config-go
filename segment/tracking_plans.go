@@ -49,7 +49,6 @@ func (c *Client) CreateTrackingPlan(displayName string, rules Rules) (trackingPl
 			DisplayName: displayName,
 			Rules:       rules,
 		}}
-	//req := trackingPlanCreateRequest{plan}
 	data, err := c.doRequest(http.MethodPost,
 		fmt.Sprintf("%s/%s/%s/",
 			WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint),
@@ -59,9 +58,25 @@ func (c *Client) CreateTrackingPlan(displayName string, rules Rules) (trackingPl
 	}
 	err = json.Unmarshal(data, &p)
 	if err != nil {
-		return p, errors.Wrap(err, "failed to unmarshall source response")
+		return p, errors.Wrap(err, "failed to unmarshall tracking plan response")
 	}
 
 	return p, nil
 
+}
+
+// UpdateTrackingPlan upates an existing tracking plan
+func (c *Client) UpdateTrackingPlan(planName string, paths []string, updatedPlan TrackingPlan) (TrackingPlan, error) {
+	var p TrackingPlan
+	req := trackingPlanUpdateRequest{TrackingPlan: updatedPlan, UpdateMask: UpdateMask{Paths: paths}}
+	data, err := c.doRequest(http.MethodPut, fmt.Sprintf("%s/%s/%s/%s/", WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint, planName), req)
+	if err != nil {
+		return p, err
+	}
+	err = json.Unmarshal(data, &p)
+	if err != nil {
+		return p, errors.Wrap(err, "failed to unmarshal tracking plan response")
+	}
+
+	return p, nil
 }
