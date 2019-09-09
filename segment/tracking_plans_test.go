@@ -654,3 +654,31 @@ func TestTrackingPlan_UpdateTrackingPlan(t *testing.T) {
 
 	assert.Equal(t, expected, actual)
 }
+
+func TestTrackingPlan_CreateTrackingPlanSourceConnection(t *testing.T) {
+	setup()
+	defer teardown()
+
+	testPlanName := "rs_123"
+	testSrcName := "js"
+	testPlanID := "rs_1Gjkh9ZKmpyHjdSZYaLTXRRgCPp"
+
+	endpoint := fmt.Sprintf("%s/%s/%s/%s/%s/%s/", apiVersion, WorkspacesEndpoint, testWorkspace, TrackingPlanEndpoint, testPlanName, TrackingPlanSourceConnectionEndpoint)
+
+	mux.HandleFunc(endpoint, func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, `{
+			"source_name": "workspaces/myworkspace/sources/js",
+			"tracking_plan_id": "rs_1Gjkh9ZKmpyHjdSZYaLTXRRgCPp"
+		}`)
+	})
+
+	expected := trackingPlanCreateSourceConnection{
+		SourceName:     testSrcName,
+		TrackingPlanID: testPlanID,
+	}
+
+	actual, err := client.CreateTrackingPlanSourceConnection(testPlanName, testSrcName)
+	assert.NoError(t, err)
+
+	assert.Equal(t, expected, actual)
+}
