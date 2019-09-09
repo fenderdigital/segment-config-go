@@ -523,3 +523,134 @@ func TestTrackingPlans_CreateTrackingPlan(t *testing.T) {
 	assert.Equal(t, expected, actual)
 
 }
+
+func TestTrackingPlan_UpdateTrackingPlan(t *testing.T) {
+	setup()
+	defer teardown()
+
+	testPlanName := "rs_123"
+	testUpdatedPlan := TrackingPlan{
+		DisplayName: "Kicks App - Updated",
+		Rules: Rules{
+			Global: Rule{},
+			Events: []Event{},
+		},
+	}
+	testPaths := []string{"tracking_plan.display_name", "tracking_plan.rules"}
+
+	endpoint := fmt.Sprintf("/%s/%s/%s/%s/%s/", apiVersion, WorkspacesEndpoint, testWorkspace, TrackingPlanEndpoint, testPlanName)
+	mux.HandleFunc(endpoint, func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, `{
+			"name": "workspaces/myworkspace/tracking-plans/rs_123",
+			"display_name": "Kicks App - Updated",
+			"rules": {
+			  "identify_traits": [],
+			  "group_traits": [],
+			  "events": [
+				{
+				  "name": "Product Viewed",
+				  "version": 1,
+				  "description": "Who checked out what",
+				  "rules": {
+					"$schema": "http://json-schema.org/draft-04/schema#",
+					"type": "object",
+					"properties": {
+					  "traits": {},
+					  "properties": {
+						"type": "object",
+						"properties": {
+						  "product": {
+							"type": [
+							  "string"
+							]
+						  }
+						},
+						"required": [
+						  "product"
+						]
+					  },
+					  "context": {}
+					},
+					"required": [
+					  "properties"
+					]
+				  }
+				}
+			  ],
+			  "global": {
+				"required": [
+				  "context"
+				],
+				"$schema": "http://json-schema.org/draft-04/schema#",
+				"type": "object",
+				"properties": {
+				  "context": {
+					"type": "object",
+					"properties": {
+					  "userAgent": {}
+					},
+					"required": [
+					  "userAgent"
+					]
+				  },
+				  "traits": {},
+				  "properties": {}
+				}
+			  }
+			},
+			"create_time": "2019-02-05T00:28:31Z",
+			"update_time": "2019-02-05T00:32:15Z"
+		  }`)
+	})
+
+	createTime, _ := time.Parse(time.RFC3339, "2019-02-05T00:28:31Z")
+	updatedTime, _ := time.Parse(time.RFC3339, "2019-02-05T00:32:15Z")
+	expected := TrackingPlan{
+		Name:        "workspaces/myworkspace/tracking-plans/rs_123",
+		DisplayName: "Kicks App - Updated",
+		Rules: Rules{
+			IdentifyTraits: []Rule{},
+			GroupTraits:    []Rule{},
+			Events: []Event{
+				{Name: "Product Viewed",
+					Version:     1,
+					Description: "who checked out what",
+					Rules: Rule{
+						Schema: "http://json-schema.org/draft-04/schema#",
+						Type:   "object",
+						Properties: map[string]Rule{
+							"traits": Rule{},
+							"properties": Rule{
+								Type: "object",
+								Properties: map[string]Rule{
+									"product": Rule{
+										Type: []string{"string"},
+									},
+								},
+								Required: []string{"product"},
+							},
+							"context": Rule{},
+						},
+						Required: []string{"properties"},
+					},
+				}},
+			Global: Rule{
+				Required: []string{"context"},
+				Schema:   "http://json-schema.org/draft-04/schema#",
+				Type:     "object",
+				Properties: map[string]Rule{
+					"context":    Rule{},
+					"traits":     Rule{},
+					"properties": Rule{},
+				},
+			},
+		},
+		CreateTime: createTime,
+		UpdateTime: updatedTime,
+	}
+
+	actual, err := client.UpdateTrackingPlan(testPlanName, testPaths, testUpdatedPlan)
+	assert.NoError(t, err)
+
+	assert.Equal(t, expected, actual)
+}
