@@ -110,3 +110,13 @@ func (c *Client) ListTrackingPlanSourceConnections(planName string) (TrackingPla
 	}
 	return p, nil
 }
+
+// DeleteTrackingPlan deletes a destination for a source from the workspace
+func (c *Client) DeleteTrackingPlan(planName string) error {
+	_, err := c.doRequest(http.MethodDelete, fmt.Sprintf("%s/%s/%s/%s/", WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint, planName), nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
