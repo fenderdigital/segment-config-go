@@ -119,3 +119,8 @@ type destinationUpdateRequest struct {
 type trackingPlanCreateRequest struct {
 	TrackingPlan TrackingPlan `json:"tracking_plan,omitempty"`
 }
+
+type trackingPlanUpdateRequest struct {
+	TrackingPlan TrackingPlan `json:"tracking_plan,omitempty"`
+	UpdateMask   UpdateMask   `json:"udpate_mask,omitempty"`
+}
