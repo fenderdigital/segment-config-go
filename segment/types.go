@@ -125,7 +125,11 @@ type trackingPlanUpdateRequest struct {
 	UpdateMask   UpdateMask   `json:"udpate_mask,omitempty"`
 }
 
-type trackingPlanCreateSourceConnection struct {
+type trackingPlanSourceConnection struct {
 	SourceName     string `json:"source_name"`
 	TrackingPlanID string `json:"tracking_plan_id"`
+}
+
+type trackingPlanSourceConnections struct {
+	Connections []trackingPlanSourceConnection `json:"connections"`
 }
