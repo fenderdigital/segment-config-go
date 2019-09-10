@@ -126,10 +126,10 @@ type trackingPlanUpdateRequest struct {
 }
 
 type trackingPlanSourceConnection struct {
-	SourceName     string `json:"source_name"`
-	TrackingPlanID string `json:"tracking_plan_id"`
+	SourceName     string `json:"source_name,omitempty"`
+	TrackingPlanID string `json:"tracking_plan_id,omitempty"`
 }
 
 type trackingPlanSourceConnections struct {
-	Connections []trackingPlanSourceConnection `json:"connections"`
+	Connections []trackingPlanSourceConnection `json:"connections,omitempty"`
 }
