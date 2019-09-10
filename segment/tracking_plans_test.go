@@ -736,3 +736,19 @@ func TestTrackingPlan_DeleteTrackingPlan(t *testing.T) {
 	err := client.DeleteTrackingPlan(testPlanName)
 	assert.NoError(t, err)
 }
+
+func TestTrackingPlan_DeleteTrackingPlanSourceConnection(t *testing.T) {
+	setup()
+	defer teardown()
+
+	testPlanName := "rs_123"
+	srcName := "js"
+
+	endpoint := fmt.Sprintf("/%s/%s/%s/%s/%s/%s/%s", apiVersion, WorkspacesEndpoint, testWorkspace, TrackingPlanEndpoint,
+		testPlanName, TrackingPlanSourceConnectionEndpoint, srcName)
+
+	mux.HandleFunc(endpoint, func(w http.ResponseWriter, r *http.Request) {})
+
+	err := client.DeleteTrackingPlanSourceConnection(testPlanName, srcName)
+	assert.NoError(t, err)
+}

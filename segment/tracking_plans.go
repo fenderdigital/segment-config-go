@@ -122,3 +122,14 @@ func (c *Client) DeleteTrackingPlan(planName string) error {
 
 	return nil
 }
+
+// DeleteTrackingPlanSourceConnection deletes a source connection for a tracking plan
+func (c *Client) DeleteTrackingPlanSourceConnection(planName string, srcName string) error {
+	_, err := c.doRequest(http.MethodDelete, fmt.Sprintf("%s/%s/%s/%s/%s/%s/", WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint,
+		planName, TrackingPlanSourceConnectionEndpoint, srcName), nil)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
