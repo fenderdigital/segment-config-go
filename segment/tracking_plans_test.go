@@ -529,12 +529,58 @@ func TestTrackingPlan_UpdateTrackingPlan(t *testing.T) {
 	defer teardown()
 
 	testPlanName := "rs_123"
+	createTime, _ := time.Parse(time.RFC3339, "2019-02-05T00:28:31Z")
+	updatedTime, _ := time.Parse(time.RFC3339, "2019-02-05T00:32:15Z")
 	testUpdatedPlan := TrackingPlan{
+		Name:        "workspaces/myworkspace/tracking-plans/rs_123",
 		DisplayName: "Kicks App - Updated",
 		Rules: Rules{
-			Global: Rule{},
-			Events: []Event{},
+			IdentifyTraits: []Rule{},
+			GroupTraits:    []Rule{},
+			Events: []Event{
+				{
+					Name:        "Product Viewed",
+					Version:     1,
+					Description: "Who checked out what",
+					Rules: Rule{
+						Schema: "http://json-schema.org/draft-04/schema#",
+						Type:   "object",
+						Properties: map[string]Rule{
+							"traits": Rule{},
+							"properties": Rule{
+								Type: "object",
+								Properties: map[string]Rule{
+									"product": Rule{
+										Type: []interface{}{"string"},
+									},
+								},
+								Required: []string{"product"},
+							},
+							"context": Rule{},
+						},
+						Required: []string{"properties"},
+					},
+				},
+			},
+			Global: Rule{
+				Schema: "http://json-schema.org/draft-04/schema#",
+				Type:   "object",
+				Properties: map[string]Rule{
+					"context": Rule{
+						Type: "object",
+						Properties: map[string]Rule{
+							"userAgent": {},
+						},
+						Required: []string{"userAgent"},
+					},
+					"traits":     Rule{},
+					"properties": Rule{},
+				},
+				Required: []string{"context"},
+			},
 		},
+		CreateTime: createTime,
+		UpdateTime: updatedTime,
 	}
 	testPaths := []string{"tracking_plan.display_name", "tracking_plan.rules"}
 
@@ -603,51 +649,7 @@ func TestTrackingPlan_UpdateTrackingPlan(t *testing.T) {
 		  }`)
 	})
 
-	createTime, _ := time.Parse(time.RFC3339, "2019-02-05T00:28:31Z")
-	updatedTime, _ := time.Parse(time.RFC3339, "2019-02-05T00:32:15Z")
-	expected := TrackingPlan{
-		Name:        "workspaces/myworkspace/tracking-plans/rs_123",
-		DisplayName: "Kicks App - Updated",
-		Rules: Rules{
-			IdentifyTraits: []Rule{},
-			GroupTraits:    []Rule{},
-			Events: []Event{
-				{Name: "Product Viewed",
-					Version:     1,
-					Description: "who checked out what",
-					Rules: Rule{
-						Schema: "http://json-schema.org/draft-04/schema#",
-						Type:   "object",
-						Properties: map[string]Rule{
-							"traits": Rule{},
-							"properties": Rule{
-								Type: "object",
-								Properties: map[string]Rule{
-									"product": Rule{
-										Type: []string{"string"},
-									},
-								},
-								Required: []string{"product"},
-							},
-							"context": Rule{},
-						},
-						Required: []string{"properties"},
-					},
-				}},
-			Global: Rule{
-				Required: []string{"context"},
-				Schema:   "http://json-schema.org/draft-04/schema#",
-				Type:     "object",
-				Properties: map[string]Rule{
-					"context":    Rule{},
-					"traits":     Rule{},
-					"properties": Rule{},
-				},
-			},
-		},
-		CreateTime: createTime,
-		UpdateTime: updatedTime,
-	}
+	expected := testUpdatedPlan
 
 	actual, err := client.UpdateTrackingPlan(testPlanName, testPaths, testUpdatedPlan)
 	assert.NoError(t, err)
@@ -662,18 +664,19 @@ func TestTrackingPlan_CreateTrackingPlanSourceConnection(t *testing.T) {
 	testPlanName := "rs_123"
 	testSrcName := "js"
 	testPlanID := "rs_1Gjkh9ZKmpyHjdSZYaLTXRRgCPp"
-
-	endpoint := fmt.Sprintf("%s/%s/%s/%s/%s/%s/", apiVersion, WorkspacesEndpoint, testWorkspace, TrackingPlanEndpoint, testPlanName, TrackingPlanSourceConnectionEndpoint)
-
+	endpoint := fmt.Sprintf("/%s/%s/%s/%s/%s/%s/", apiVersion, WorkspacesEndpoint, testWorkspace,
+		TrackingPlanEndpoint, testPlanName, TrackingPlanSourceConnectionEndpoint)
+	fmt.Printf("METHOD ENDPOINT: %+v\n", endpoint)
 	mux.HandleFunc(endpoint, func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, `{
-			"source_name": "workspaces/myworkspace/sources/js",
+			"source_name": "workspaces/test-workspace/sources/js",
 			"tracking_plan_id": "rs_1Gjkh9ZKmpyHjdSZYaLTXRRgCPp"
 		}`)
 	})
 
+	sourcePath := fmt.Sprintf("%s/%s/%s/%s", WorkspacesEndpoint, testWorkspace, SourceEndpoint, testSrcName)
 	expected := trackingPlanSourceConnection{
-		SourceName:     testSrcName,
+		SourceName:     sourcePath,
 		TrackingPlanID: testPlanID,
 	}
 
@@ -691,23 +694,24 @@ func TestTrackingPlan_ListTrackingPlanSourceConnections(t *testing.T) {
 	testSrcName := "js"
 	testPlanID := "rs_1Gjkh9ZKmpyHjdSZYaLTXRRgCPp"
 
-	endpoint := fmt.Sprintf("%s/%s/%s/%s/%s/%s/", apiVersion, WorkspacesEndpoint, testWorkspace, TrackingPlanEndpoint, testPlanName, TrackingPlanSourceConnectionEndpoint)
+	endpoint := fmt.Sprintf("/%s/%s/%s/%s/%s/%s/", apiVersion, WorkspacesEndpoint, testWorkspace, TrackingPlanEndpoint, testPlanName, TrackingPlanSourceConnectionEndpoint)
 
 	mux.HandleFunc(endpoint, func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, `{
 			"connections": [
 			  {
-				"source_name": "workspaces/myworkspace/sources/js",
+				"source_name": "workspaces/test-workspace/sources/js",
 				"tracking_plan_id": "rs_1Gjkh9ZKmpyHjdSZYaLTXRRgCPp"
 			  }
 			]
 		}`)
 	})
 
+	sourcePath := fmt.Sprintf("%s/%s/%s/%s", WorkspacesEndpoint, testWorkspace, SourceEndpoint, testSrcName)
 	expected := trackingPlanSourceConnections{
 		Connections: []trackingPlanSourceConnection{
 			{
-				SourceName:     testSrcName,
+				SourceName:     sourcePath,
 				TrackingPlanID: testPlanID,
 			},
 		},
@@ -725,7 +729,7 @@ func TestTrackingPlan_DeleteTrackingPlan(t *testing.T) {
 
 	testPlanName := "rs_123"
 
-	endpoint := fmt.Sprintf("%s/%s/%s/%s/%s", apiVersion, WorkspacesEndpoint, testWorkspace, TrackingPlanEndpoint, testPlanName)
+	endpoint := fmt.Sprintf("/%s/%s/%s/%s/%s", apiVersion, WorkspacesEndpoint, testWorkspace, TrackingPlanEndpoint, testPlanName)
 
 	mux.HandleFunc(endpoint, func(w http.ResponseWriter, r *http.Request) {})
 
