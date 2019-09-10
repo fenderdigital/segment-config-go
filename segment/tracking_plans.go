@@ -82,10 +82,12 @@ func (c *Client) UpdateTrackingPlan(planName string, paths []string, updatedPlan
 }
 
 // CreateTrackingPlanSourceConnection connects a source to a tracking plan
-func (c *Client) CreateTrackingPlanSourceConnection(planName string, srcName string) (TrackingPlan, error) {
-	var p TrackingPlan
+func (c *Client) CreateTrackingPlanSourceConnection(planName string, srcName string) (trackingPlanSourceConnection, error) {
+	var p trackingPlanSourceConnection
 	req := trackingPlanSourceConnection{SourceName: srcName}
-	data, err := c.doRequest(http.MethodPost, fmt.Sprintf("%s/%s/%s/%s/%s/", WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint, planName, TrackingPlanSourceConnectionEndpoint), req)
+	endpoint := fmt.Sprintf("%s/%s/%s/%s/%s/", WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint,
+		planName, TrackingPlanSourceConnectionEndpoint)
+	data, err := c.doRequest(http.MethodPost, endpoint, req)
 	if err != nil {
 		return p, err
 	}
@@ -98,8 +100,8 @@ func (c *Client) CreateTrackingPlanSourceConnection(planName string, srcName str
 }
 
 // ListTrackingPlanSourceConnections lists the source connections for a tracking plan
-func (c *Client) ListTrackingPlanSourceConnections(planName string) (TrackingPlan, error) {
-	var p TrackingPlan
+func (c *Client) ListTrackingPlanSourceConnections(planName string) (trackingPlanSourceConnections, error) {
+	var p trackingPlanSourceConnections
 	data, err := c.doRequest(http.MethodGet, fmt.Sprintf("%s/%s/%s/%s/%s/", WorkspacesEndpoint, c.workspace, TrackingPlanEndpoint, planName, TrackingPlanSourceConnectionEndpoint), nil)
 	if err != nil {
 		return p, err
