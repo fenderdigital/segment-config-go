@@ -7,7 +7,7 @@ type Workspace struct {
 	Name        string    `json:"name,omitempty"`
 	DisplayName string    `json:"display_name,omitempty"`
 	ID          string    `json:"id,omitempty"`
-	CreateTime  time.Time `json:"create_time,omitempty"`
+	CreateTime  *time.Time `json:"create_time,omitempty"`
 }
 
 // Sources defines the struct for the sources object
@@ -22,7 +22,7 @@ type Source struct {
 	Parent        string        `json:"parent,omitempty"`
 	WriteKeys     []string      `json:"write_keys,omitempty"`
 	LibraryConfig LibraryConfig `json:"library_config,omitempty"`
-	CreateTime    time.Time     `json:"create_time,omitempty"`
+	CreateTime    *time.Time     `json:"create_time,omitempty"`
 }
 
 // LibraryConfig contains information about a source's library
@@ -46,8 +46,8 @@ type Destination struct {
 	Enabled        bool                `json:"enabled,omitempty"`
 	ConnectionMode string              `json:"connection_mode,omitempty"`
 	Configs        []DestinationConfig `json:"config,omitempty"`
-	CreateTime     time.Time           `json:"create_time,omitempty"`
-	UpdateTime     time.Time           `json:"update_time,omitempty"`
+	CreateTime     *time.Time           `json:"create_time,omitempty"`
+	UpdateTime     *time.Time           `json:"update_time,omitempty"`
 }
 
 // TrackingPlans defines the struct for the tracking plan object
@@ -57,11 +57,11 @@ type TrackingPlans struct {
 
 // TrackingPlan defines the struct for the destination object
 type TrackingPlan struct {
-	Name        string    `json:"name"`
+	Name        string    `json:"name,omitempty"`
 	DisplayName string    `json:"display_name,omitempty"`
 	Rules       Rules     `json:"rules,omitempty"`
-	CreateTime  time.Time `json:"create_time,omitempty"`
-	UpdateTime  time.Time `json:"update_time,omitempty"`
+	CreateTime  *time.Time `json:"create_time,omitempty"`
+	UpdateTime  *time.Time `json:"update_time,omitempty"`
 }
 
 // Rules contains the information about all the rules of a tracking plan
@@ -122,7 +122,7 @@ type trackingPlanCreateRequest struct {
 
 type trackingPlanUpdateRequest struct {
 	TrackingPlan TrackingPlan `json:"tracking_plan,omitempty"`
-	UpdateMask   UpdateMask   `json:"udpate_mask,omitempty"`
+	UpdateMask   UpdateMask   `json:"update_mask,omitempty"`
 }
 
 type trackingPlanSourceConnection struct {
