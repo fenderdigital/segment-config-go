@@ -48,8 +48,8 @@ func TestTrackingPlans_ListTrackingPlans(t *testing.T) {
 				GroupTraits:    []Rule{},
 				Events:         []Event{},
 			},
-			CreateTime: createTime,
-			UpdateTime: updatedTime,
+			CreateTime: &createTime,
+			UpdateTime: &updatedTime,
 		},
 	}}
 	fmt.Printf("ACTUAL:: %+v\n", actual)
@@ -286,8 +286,8 @@ func TestTrackingPlans_GetTrackingPlan(t *testing.T) {
 				},
 			},
 		},
-		CreateTime: createTime,
-		UpdateTime: updatedTime,
+		CreateTime: &createTime,
+		UpdateTime: &updatedTime,
 	}
 	fmt.Printf("ACTUAL:: %+v\n", actual)
 	assert.Equal(t, expected, actual)
@@ -579,8 +579,8 @@ func TestTrackingPlan_UpdateTrackingPlan(t *testing.T) {
 				Required: []string{"context"},
 			},
 		},
-		CreateTime: createTime,
-		UpdateTime: updatedTime,
+		CreateTime: &createTime,
+		UpdateTime: &updatedTime,
 	}
 	testPaths := []string{"tracking_plan.display_name", "tracking_plan.rules"}
 
