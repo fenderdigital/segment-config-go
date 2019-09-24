@@ -13,5 +13,3 @@
 
 .envrc
 .vscode
-vendor/**
-main.go
