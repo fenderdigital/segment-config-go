@@ -41,9 +41,8 @@ func (c *Client) GetTrackingPlan(planName string) (TrackingPlan, error) {
 }
 
 // CreateTrackingPlan creates a new tracking plan
-func (c *Client) CreateTrackingPlan(displayName string, rules Rules) (trackingPlanCreateRequest, error) {
-	var p trackingPlanCreateRequest
-
+func (c *Client) CreateTrackingPlan(displayName string, rules Rules) (TrackingPlan, error) {
+	var p TrackingPlan
 	plan := trackingPlanCreateRequest{
 		TrackingPlan: TrackingPlan{
 			DisplayName: displayName,
