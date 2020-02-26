@@ -81,6 +81,9 @@ type Rule struct {
 	Properties  map[string]Rule `json:"properties,omitempty"`
 	Required    []string        `json:"required,omitempty"`
 	Description string          `json:"description,omitempty"`
+	Enum        []string        `json:"enum,omitempty"`
+	Labels      interface{}     `json:"labels,omitempty"`
+	Pattern     interface{}     `json:"pattern,omitempty"`
 }
 
 // Event contains the rules for each tracking event
