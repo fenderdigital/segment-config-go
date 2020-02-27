@@ -66,12 +66,12 @@ type TrackingPlan struct {
 
 // Rules contains the information about all the rules of a tracking plan
 type Rules struct {
-	Global         Rule    `json:"global"`
-	Events         []Event `json:"events"`
-	Identify       Rule    `json:"identify"`
-	Group          Rule    `json:"group"`
-	IdentifyTraits []Rule  `json:"identify_traits"`
-	GroupTraits    []Rule  `json:"group_traits"`
+	Global         interface{}   `json:"global"`
+	Events         []interface{} `json:"events"`
+	Identify       interface{}   `json:"identify"`
+	Group          interface{}   `json:"group"`
+	IdentifyTraits []interface{} `json:"identify_traits"`
+	GroupTraits    []interface{} `json:"group_traits"`
 }
 
 // Rule contains the information about the rule definition
