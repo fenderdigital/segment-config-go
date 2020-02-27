@@ -76,14 +76,14 @@ type Rules struct {
 
 // Rule contains the information about the rule definition
 type Rule struct {
-	Schema      string          `json:"$schema,omitempty"`
-	Type        interface{}     `json:"type,omitempty"`
-	Properties  map[string]Rule `json:"properties,omitempty"`
-	Required    []string        `json:"required,omitempty"`
-	Description string          `json:"description,omitempty"`
-	Enum        []string        `json:"enum,omitempty"`
-	Labels      interface{}     `json:"labels,omitempty"`
-	Pattern     interface{}     `json:"pattern,omitempty"`
+	Schema      string                 `json:"$schema,omitempty"`
+	Type        interface{}            `json:"type,omitempty"`
+	Properties  map[string]Rule        `json:"properties,omitempty"`
+	Required    []string               `json:"required,omitempty"`
+	Description string                 `json:"description,omitempty"`
+	Enum        []interface{}          `json:"enum,omitempty"`
+	Labels      map[string]interface{} `json:"labels,omitempty"`
+	Pattern     interface{}            `json:"pattern,omitempty"`
 }
 
 // Event contains the rules for each tracking event
