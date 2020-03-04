@@ -78,11 +78,11 @@ type Rules struct {
 type Rule struct {
 	Schema      string                 `json:"$schema,omitempty"`
 	Type        interface{}            `json:"type,omitempty"`
-	Properties  map[string]interface{} `json:"properties,omitempty"`
+	Properties  map[string]Rule        `json:"properties,omitempty"`
 	Required    []string               `json:"required,omitempty"`
 	Description string                 `json:"description,omitempty"`
 	Enum        []interface{}          `json:"enum,omitempty"`
-	Labels      map[string]interface{} `json:"labels"`
+	Labels      map[string]interface{} `json:"labels, omitempty"`
 	Pattern     interface{}            `json:"pattgitern,omitempty"`
 }
 
