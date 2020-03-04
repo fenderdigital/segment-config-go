@@ -57,21 +57,21 @@ type TrackingPlans struct {
 
 // TrackingPlan defines the struct for the destination object
 type TrackingPlan struct {
-	Name        string                 `json:"name,omitempty"`
-	DisplayName string                 `json:"display_name,omitempty"`
-	Rules       map[string]interface{} `json:"rules,omitempty"`
-	CreateTime  *time.Time             `json:"create_time,omitempty"`
-	UpdateTime  *time.Time             `json:"update_time,omitempty"`
+	Name        string     `json:"name,omitempty"`
+	DisplayName string     `json:"display_name,omitempty"`
+	Rules       Rules      `json:"rules,omitempty"`
+	CreateTime  *time.Time `json:"create_time,omitempty"`
+	UpdateTime  *time.Time `json:"update_time,omitempty"`
 }
 
 // Rules contains the information about all the rules of a tracking plan
 type Rules struct {
-	Global         interface{}   `json:"global"`
-	Events         []interface{} `json:"events"`
-	Identify       interface{}   `json:"identify"`
-	Group          interface{}   `json:"group"`
-	IdentifyTraits []interface{} `json:"identify_traits"`
-	GroupTraits    []interface{} `json:"group_traits"`
+	Global         map[string]interface{} `json:"global,omitempty"`
+	Events         []Event                `json:"events,omitempty"`
+	Identify       map[string]interface{} `json:"identify,omitempty"`
+	Group          map[string]interface{} `json:"group,omitempty"`
+	IdentifyTraits []interface{}          `json:"identify_traits"`
+	GroupTraits    []interface{}          `json:"group_traits"`
 }
 
 // Rule contains the information about the rule definition
