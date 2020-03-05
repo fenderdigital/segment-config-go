@@ -82,7 +82,7 @@ type Rule struct {
 	Required    []string        `json:"required,omitempty"`
 	Description string          `json:"description,omitempty"`
 	Enum        []interface{}   `json:"enum,omitempty"`
-	Labels      interface{}     `json:"labels, omitempty"`
+	Labels      interface{}     `json:"labels,omitempty"`
 	Pattern     interface{}     `json:"pattern,omitempty"`
 }
 
